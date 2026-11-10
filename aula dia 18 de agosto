@@ -1,0 +1,35 @@
+OBS:NO DIA DA AULA NÃO CONSEGUI ENVIAR PORQUE ESTAVA BUGADO O GITHUB E APRESENTAVA ERRO AO CRIAR ALGUM ARQUIVO
+
+select id_curso, tx_nome
+from tb_curso  
+
+select id_professor, tx_nome
+from tb_professor 
+
+
+
+select 
+*
+from tb_professor
+inner join tb_disciplina
+	on
+	tb_disciplina.cd_professor =
+	tb_professor.id_professor
+	
+
+	
+select p.tx_nome,c.tx_nome,e.vl_nota_1, e.vl_nota_2, e.vl_nota_3
+
+from tb_aluno p 
+inner join tb_curso c
+	on 
+	p.id_aluno =
+	c.id_curso 
+	inner join tb_nota e
+	on
+	p.id_aluno =
+	e.cd_matricula  
+	
+	where e.vl_nota_1 > 6 
+	and e.vl_nota_2 > 6 
+	and e.vl_nota_3 > 6

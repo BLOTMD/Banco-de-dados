@@ -1,0 +1,53 @@
+Criação de banco de dados com meu nome:
+
+create database "joão";
+
+Para renomear colunas ou tabelas:
+
+
+criação de compras:
+
+ALTER TABLE nome_antigo
+RENAME TO nome_novo;
+
+ALTER TABLE nome_da_tabela
+RENAME COLUMN nome_antigo TO nome_novo;
+
+CREATE TABLE tb_compras (
+    id_compra SERIAL PRIMARY KEY,
+    tx_nome VARCHAR(50),
+    tx_destino VARCHAR(50),
+    tx_pagamento VARCHAR(100),
+    vl_preco integer,
+    nr_quantidade integer
+);
+
+
+
+criação de produtos:
+
+CREATE TABLE tb_produto (
+    id_produto SERIAL PRIMARY KEY,
+    tx_nome VARCHAR(50),
+    tx_tipo VARCHAR(100),
+    tx_quantidade int
+);
+
+criação de usuario:
+
+create table tb_usuario {
+	id_usuario serial primary key,
+	tx_nome varchar(50),
+	nr_idade int(18,0),
+	tx_email varchar(200),
+	tx_senha varchar(200),
+	dt_cadastro timestamp
+};
+
+criação de tabela para comparações:
+
+CREATE TABLE tb_comparação (
+    id_peça SERIAL PRIMARY KEY,
+    tx_nomepeças VARCHAR(50),
+    nr_potencia int
+);

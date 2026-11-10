@@ -1,0 +1,35 @@
+not null = torna a informação obrigatoria
+
+insert = insere informações na tabela 
+
+default = faz com que uma informação pre definida seja colocada cajo não tenha sido colocado nenhum dado naquela colunas
+
+default current_date = faz com que o campo seja preenchido com a data atual se não for inserido nenhum outro dado
+
+
+COMANDOS FEITOS EM AULA:
+
+ALTER TABLE tb_item_carrinho
+ADD COLUMN dt_pagamento timestamp default current_date;
+
+insert into tb_usuario (tx_nome, nr_idade)
+values ('enzo', 16);
+
+select tx_nome from tb_item_carrinho 
+create table tb_calculadora (
+	id_calculadora Serial primary key,
+	nr_valor numeric(18,0) not null,
+	tx_operacao Varchar(2) not null
+)
+
+insert into tb_calculadora (nr_valor, tx_operacao)
+values 
+	(50, '/'),
+	(60, '/'),
+	(40, '/'),
+	(34, '/');
+
+
+
+select sum(nr_valor) as valortotal from tb_calculadora
+where tx_operacao = '+';

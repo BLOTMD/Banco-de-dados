@@ -1,0 +1,6 @@
+select p.tx_nome,min(h.vl_preco_anterior ),max(h.vl_preco_novo  )
+from tb_produto p
+left join tb_preco_historico h
+ 	on p.id_produto = h.cd_produto 
+where  dt_alteracao between '01-02-2024' and '30-03-2024'
+group by p.tx_nome

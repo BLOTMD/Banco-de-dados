@@ -1,0 +1,50 @@
+
+	
+	with variavel as ( 
+select
+    cd_empresa,
+    count(cd_empresa) > 3,
+    sum(iv.nr_quantidade * iv.vl_unitario) as receitabruta
+from tb_venda v
+join tb_item_venda iv on iv.cd_venda = v.id_venda
+where upper(v.tx_status) = 'PAGO'
+group by cd_empresa
+)
+select * from variavel 
+inner join tb_empresa te
+on te.id_empresa = variavel.cd_empresa
+where receitabruta > 10000
+
+--9
+
+select 
+    tx_nome,
+    case
+        when left(tx_nome, 1) = 'A' then 'começa co m A'
+        when right(tx_nome, 1) = 'o' then 'termina com o'
+        else 'outros'
+    end as resultado
+from tb_cliente;
+
+
+--8
+
+with vendas as (
+select
+cd_cliente,
+sum(produto.nr_quantidade * produto.vl_unitario ) as valor
+from tb_venda
+inner join tb_item_venda produto on produto.cd_venda = id_venda
+where
+upper(tx_status) = 'PAGO'
+group by
+cd_cliente
+), media as (
+select sum(valor) / count(distinct cd_cliente) as mediaa from vendas
+)
+select * from tb_cliente
+inner join vendas on cd_cliente = id_cliente
+inner join media on valor > mediaa
+
+--10
+

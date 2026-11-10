@@ -1,0 +1,67 @@
+--1
+select p.tx_nome,c.tx_nome, p.vl_preco, nr_estoque, p.fl_ativo
+
+from tb_produto p
+left join tb_categoria c
+on c.id_categoria = p.cd_categoria
+
+where p.vl_preco > 500 and p.vl_preco < 1000
+
+--2
+select tx_nome,tx_cpf,tx_email,tx_estado
+from tb_cliente 
+
+where upper(tx_estado) in (upper('SC'), 
+upper('PR')) 
+order by tx_nome asc
+
+--3
+select tx_nome,nr_idade,tx_email  
+from tb_cliente 
+
+where tx_email is null 
+or nr_idade > 50 
+order by tx_nome asc
+
+--4
+select p.tx_nome as usuario, 
+p.vl_preco as preco, 
+f.tx_nome as fornecedor, 
+c.tx_descricao as descategoria, 
+p.fl_ativo as estaativo
+
+from tb_produto p
+left join tb_fornecedor f
+on f.id_fornecedor = p.cd_fornecedor 
+	left join tb_categoria c
+		on c.id_categoria = p.cd_categoria
+		
+		where p.fl_ativo is true
+		order by p.vl_preco desc
+
+--5
+		
+select c.tx_nome as usuario,
+c.tx_cidade as cidade, 
+count(v) as vendastotal
+from tb_cliente c
+left join tb_venda v
+	on v.cd_cliente  = c.id_cliente
+	
+	group by 
+	usuario,
+	cidade
+	
+	order by vendastotal desc
+
+
+
+--6 
+select c.tx_nome as categoria
+from tb_categoria c
+left join tb_produto p
+	on c.id_categoria = p.cd_categoria
+	where p.id_produto  is null
+
+
+

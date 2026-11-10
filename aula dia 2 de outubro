@@ -1,0 +1,90 @@
+create view vw_pedidos_usuarios as
+with totalpedidos as (
+    select 
+        u.id_usuario,
+        u.tx_nome,
+        count(p.id_pedido) as quantidade_pedidos
+    from tb_usuarios u
+    left join tb_pedidos p
+        on u.id_usuario = p.cd_usuario
+    group by 
+        u.id_usuario,
+        u.tx_nome
+)
+
+select 
+    p.id_pedido as id, 
+    p.tx_status as status, 
+    p.vl_total as valor,
+    p.fl_pago as statuspagamento,
+    p.dt_pedido as data
+from tb_pedidos p
+inner join totalpedidos tp
+    on p.cd_usuario = tp.id_usuario
+where tp.quantidade_pedidos > 3
+  and p.dt_pedido < (now() - interval '2 years') 
+  and p.fl_pago is true;
+
+
+select * from tb_itens_pedido tp 
+
+
+
+with totalpedidos2 as (
+    select 
+        u.id_usuario,
+        u.tx_nome,
+        sum(nr_quantidade) as quantidade_items,
+        count(distinct p.id_pedido) as quantidade_pedidos,
+        sum((vl_unitario * nr_quantidade ) - vl_desconto) as valoruni
+    from tb_usuarios u
+    left join tb_pedidos p
+        on u.id_usuario = p.cd_usuario
+        left join tb_itens_pedido 
+    group by 
+        u.id_usuario,
+        u.tx_nome
+)
+select 
+tp.cd_usuario as codigo,
+t.quantidade_pedidos as qtdpedidos,
+t.quantidade_items as qtditems,
+t.valoruni as valorlqd
+from tb_pedidos tp 
+inner join totalpedidos2 t
+	on tp.cd_usuario = t.id_usuario 
+	
+
+with media as (
+select
+avg(valor) as valor
+from vw_pedidos_usuario
+),
+cancelado as (
+select count(id_pedido)as qntcancelado,cd_usuario from tb_pedidos
+where upper(tx_status) = upper('cancelado')
+group by cd_usuario
+)
+select
+tu.id_usuario as usuario,
+tu.tx_nome as nome,
+tx_uf as estado,
+vpu.quantidadepedido,
+tu.fl_ativo
+from tb_usuarios tu
+inner join tb_enderecos te
+on te.cd_usuario = tu.id_usuario
+inner join vw_pedidos_usuario vpu
+on tu.id_usuario = vpu.usuario
+inner join tb_pedidos tp
+on tp.cd_usuario = tu.id_usuario
+inner join media
+on vpu.valor > media.valor
+left join cancelado
+on cancelado.cd_usuario = tu.id_usuario
+where tu.fl_ativo is true
+group by tu.id_usuario,te.tx_uf,vpu.quantidadepedido
+
+
+
+		

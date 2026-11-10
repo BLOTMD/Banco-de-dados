@@ -1,0 +1,46 @@
+explain
+select cd_usuario,dt_pedido,vl_total from tb_pedidos
+where cd_usuario = 1234;			
+
+
+create index
+	idx_usuario_cd	
+	on tb_pedidos(cd_usuario);
+
+
+select u.tx_nome,p.id_pedido,pr.tx_nome,i.nr_quantidade,i.vl_unitario
+from tb_usuarios u
+inner join tb_pedidos p
+	on u.id_usuario = p.cd_usuario 
+	inner join tb_itens_pedido i
+	 	on i.cd_pedido = p.id_pedido 
+	 	inner join tb_produtos pr
+	 		on i.cd_produto = pr.id_produto 
+	 		where u.id_usuario = 1234;
+
+CREATE INDEX idx_pedidos_cd_usuario
+ON tb_pedidos (cd_usuario);
+
+CREATE INDEX idx_pedidos_produto
+ON tb_itens_pedido (cd_produto);
+
+
+0,075-0,05 / 0,075 * 100 = 33%
+select * from tb_pedidos
+
+
+select id_pedido,vl_total
+from tb_pedidos 
+where upper(tx_status) = Upper('ENTREGUE') or dt_pedido > '2023-05-23'
+
+create index idx_pedido_data
+on tb_pedidos(upper(tx_status),dt_pedido);
+
+select u.tx_nome,e.tx_logradouro,e.nr_numero,e.tx_cidade
+from tb_usuarios u 
+inner join tb_enderecos e  
+	on u.id_usuario = e.cd_usuario
+	
+CREATE INDEX idx_enderecos_cd_usuario
+ON tb_enderecos(cd_usuario);
+	

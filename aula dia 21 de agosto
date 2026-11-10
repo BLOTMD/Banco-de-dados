@@ -1,0 +1,83 @@
+--1
+select tx_nome, tx_cidade
+from tb_aluno
+order by tx_cidade asc
+
+--2
+select a.tx_nome, n.vl_nota 
+from tb_aluno a
+ inner join tb_nota n 
+ on a.id_aluno = n.id_matricula
+ where vl_nota < 5
+ order by vl_nota asc
+ 
+ --3
+ select a.tx_nome, a.tx_cidade, m.id_matricula
+ from tb_aluno a
+ inner join tb_matricula m
+	on a.id_aluno = m.id_aluno 
+	order by tx_cidade asc
+	
+ --4
+select *
+from tb_turma t
+	left join tb_matricula m 
+	on t.id_turma = m.id_turma
+	left join tb_nota n
+	on m.id_matricula = n.id_matricula
+	where id_nota is null
+	
+
+--5
+select tx_nome, id_matricula
+from tb_aluno a
+	left join tb_matricula m
+	on a.id_aluno = m.id_aluno 
+	where m.id_aluno is null
+
+--6
+select tx_nome , tx_cidade
+from tb_aluno 
+where tx_cidade = 'Chapecó'
+
+
+--7
+select a.tx_nome, n.vl_nota
+from tb_aluno a
+	left  join tb_nota n
+	on a.id_aluno = n.id_matricula
+	where 
+		vl_nota = 3
+		or vl_nota = 5 
+		or vl_nota = 7 
+		or vl_nota = 9
+		order by asc
+		
+--8
+select *
+from tb_turma t
+	left join tb_matricula m 
+	on t.id_turma = m.id_turma
+	left join tb_nota n
+	on m.id_matricula = n.id_matricula
+	where id_nota is null
+	
+--9
+	
+	
+	
+	
+	
+--10
+select count(id_matricula) 
+from tb_professor  p
+	inner join tb_disciplina d
+	on id_professor = id_disciplina 
+	left join tb_nota n
+	on d.id_disciplina = n.id_disciplina
+	left join tb_matricula m
+	on n.id_matricula = m.id_matricula 
+	left join tb_aluno a
+	on m.id_aluno = a.id_aluno
+	group by p.id_professor,p.tx_nome 
+

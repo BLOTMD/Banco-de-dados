@@ -1,0 +1,79 @@
+
+--10
+with estoque as (
+select
+cd_categoria,
+sum(nr_estoque ) / count(id_produto )
+as media
+from
+tb_produto
+group by cd_categoria
+)
+select
+produto.tx_descricao ,
+cat.tx_descricao,
+produto.nr_estoque,
+estoque.media,
+estoque.media - produto.nr_estoque as diferenca
+from
+tb_produto produto
+inner join tb_categoria cat on
+cat.id_categoria = produto.cd_categoria
+inner join estoque on
+estoque.cd_categoria = produto.cd_categoria
+where
+estoque.media > produto.nr_estoque
+
+--11
+
+with total as (
+    select
+        tv.cd_cliente,
+        count(tv.id_venda) as vendas
+    from tb_venda tv
+    group by tv.cd_cliente
+),
+with classe as (
+	case 
+		when (vendas > 1) then 'CLIENTE PEQUENO' 
+		when (vendas = 1) then 'CLIENTE MEDIO' 
+		when (vendas = 2) then 'CLIENTE GRANDE' 
+		else 'OUTROS'
+	end
+	from relatorio
+),
+produto_min_max as (
+	select 
+		v.cd_cliente
+		count(v.id_venda) as compra,
+		min(v.dt_venda) as primeiracompra,
+		max(v.dt_venda) as ultimacompra
+	from tb_venda v
+	group by v.cd_cliente
+),
+
+with total_gasto as ( 
+select
+    v.cd_cliente ,
+    count(cd_cliente)
+    sum(iv.nr_quantidade * iv.vl_unitario) as receitabruta
+from tb_venda v
+join tb_item_venda iv on iv.cd_venda = v.id_venda
+where upper(v.tx_status) = 'PAGO'
+group by 
+)
+
+
+select
+	c.tx_nome as cliente
+	e.tx_cidade as cidade
+	total.vendas as totalvendas
+	total_gasto.total as totalgasto
+	relatorio.favorito as produtomaiscomprado
+	relatorio.primeira as primeiracompra
+	relatorio.ultima as ultimacompra
+	classificacao.classe as classificacao
+	from tb_cliente c
+	left join tb_endereco e 
+	on c.cd_endereco  = e.id_endereco  
+	

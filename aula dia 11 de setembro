@@ -1,0 +1,18 @@
+create table tb_cliente(
+	id_cliente serial primary key,
+	tx_nome varchar(255),
+	vl_idade numeric(3, 0),
+	tx_uf varchar(2),
+	
+	constraint  ck_checagem_idade check (vl_idade > 0),
+	constraint  ck_checagem_estado check (tx_uf = upper(tx_uf))
+)
+
+
+insert into tb_cliente(tx_nome,vl_idade,tx_uf)
+	values 
+		('Jorge',18,'SC'),
+		('Paulo',20,'SP'),
+		('Davi',18,'RJ');
+
+select * from tb_cliente

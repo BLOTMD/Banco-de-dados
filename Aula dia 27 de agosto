@@ -1,0 +1,57 @@
+select
+c.tx_nome  ,
+email.tx_contato as email ,
+telefone.tx_contato as celular,
+telefone.tx_contato as tefonefixo
+ from tb_cliente c
+ inner join tb_contato email
+ 	on email.cd_cliente = c.id_cliente  
+ 	and email.cd_tipo_contato = 1 
+ inner join tb_contato celular
+ 	on celular.cd_cliente = c.id_cliente  
+ 	and celular.cd_tipo_contato = 2
+ inner join tb_contato telefone
+ 	on telefone.cd_cliente = c.id_cliente  
+ 	and telefone.cd_tipo_contato = 3
+ 	
+ 	
+--2
+ 	
+ select
+ c.tx_nome as nome,
+ email.tx_contato as email
+ from tb_cliente c
+ left join tb_contato email
+	on email.cd_cliente = c.id_cliente  
+ 	and email.cd_tipo_contato = 1 
+ 	order by c.tx_nome asc	
+ 	
+ 	
+ --3
+select 
+c.tx_nome as nome,
+a.tx_comentario as comentario,
+p.tx_descricao as descricao,
+a.nr_nota as nota
+from tb_cliente c 
+left join tb_avaliacao a
+on a.cd_cliente = a.id_avaliacao 
+left join tb_produto p
+on a.cd_produto  = p.id_produto 
+
+--4
+j[].                                                                                                                                                                              j
+select 
+tx_nome,
+nr_idade 
+from 
+	tb_cliente
+	where 
+nr_idade  > (
+	select
+	 sum(nr_idade) / count(id_cliente) as media
+	 
+	from tb_cliente);
+
+ 
+ 

@@ -1,0 +1,35 @@
+update tb_produto tp set vl_preco = 1234.56
+where tp.id_produto  = 1;
+
+update tb_produto tp set vl_preco = (vl_preco*1.10)
+where tp.tx_nome  = upper('Smartphone');
+
+update tb_produto tp set nr_estoque  = (tp.nr_estoque - 5 )
+where tp.tx_nome  = upper('Notebook'); 
+
+select * from tb_pedido tp 
+
+delete from tb_pedido 
+where id_pedido = 9;
+
+delete from tb_pedido
+where nr_quantidade < 3 and dt_pedido < '2024-02-01'
+
+with funcao as (
+select tb_categoria.tx_nome,count(id_produto) as quantidade 
+from tb_produto
+inner join tb_categoria 
+on cd_categoria = id_categoria 
+where fl_ativo = true 
+group by tb_categoria.tx_nome
+)
+select * from funcao where quantidade > 2
+
+
+select tb_categoria.tx_nome,count(id_produto) as quantidade 
+from tb_produto
+inner join tb_categoria 
+on cd_categoria = id_categoria 
+where fl_ativo = true 
+group by tb_categoria.tx_nome
+having count(id_produto) > 2

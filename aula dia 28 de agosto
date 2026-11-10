@@ -1,0 +1,17 @@
+
+	
+	with variavel as ( 
+select
+    cd_empresa,
+    count(cd_empresa) > 3,
+    sum(iv.nr_quantidade * iv.vl_unitario) as receitabruta
+from tb_venda v
+join tb_item_venda iv on iv.cd_venda = v.id_venda
+where upper(v.tx_status) = 'PAGO'
+group by cd_empresa
+)
+select * from variavel 
+inner join tb_empresa te
+on te.id_empresa = variavel.cd_empresa
+where receitabruta > 10000
+
