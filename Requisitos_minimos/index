@@ -1,0 +1,21 @@
+CREATE INDEX idx_compra_usuario
+ON tb_compra (cd_usuario);
+
+CREATE INDEX idx_produto_categoria
+ON tb_produto (cd_categoria);
+
+CREATE INDEX idx_compra_produto
+ON tb_compra (id_produto);
+
+select * from tb_produto
+--antes:0.004
+--depois:0,001
+--melhoria:75%
+select * from tb_compra
+--antes:0,003
+--depois:0,002
+--melhoria:33%
+select * from tb_compra
+--antes:0,004
+--depois:0,001
+--melhoria:75%

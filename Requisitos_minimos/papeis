@@ -1,0 +1,7 @@
+create role administrador
+with login
+password 'Admin1234';
+
+create role padrao
+with login
+password 'padrao1234';

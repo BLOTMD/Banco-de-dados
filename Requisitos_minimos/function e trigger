@@ -1,0 +1,16 @@
+CREATE OR REPLACE FUNCTION fn_padronizar_nome()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.tx_nome := UPPER(NEW.tx_nome);
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_padronizar_nome
+BEFORE INSERT ON tb_usuario
+FOR EACH ROW
+EXECUTE FUNCTION fn_padronizar_nome();
+
+insert into tb_usuario( 
+    tx_nome
+)values('jorge')

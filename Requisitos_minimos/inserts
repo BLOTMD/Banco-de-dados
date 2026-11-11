@@ -1,0 +1,40 @@
+INSERT INTO tb_categoria (tx_nome) VALUES
+('Processadores'),
+('Placas de vídeo'),
+('Placas-mãe'),
+('Memórias RAM'),
+('Armazenamento'),
+('Fontes'),
+('Gabinetes'),
+('Coolers'),
+('Periféricos'),
+('Monitores');
+
+INSERT INTO tb_usuario (
+    tx_nome,
+    tx_email,
+    tx_senha,
+    tx_telefone,
+    dt_datanascimento,
+    cd_tipousuario,
+    cd_status
+) VALUES
+('João Silva', 'joao@email.com', 'senha123', '48999991111', '2000-05-12', 1, 1),
+
+('Maria Santos', 'maria@email.com', 'senha123', '48999992222', '1998-08-20', 2, 1),
+
+('Pedro Oliveira', 'pedro@email.com', 'senha123', '48999993333', '1995-03-15', 3, 1),
+
+('Ana Costa', 'ana@email.com', 'senha123', '48999994444', '2001-11-25', 2, 1),
+
+('Lucas Ferreira', 'lucas@email.com', 'senha123', '48999995555', '1999-01-10', 4, 1),
+
+('Carla Souza', 'carla@email.com', 'senha123', '48999996666', '1997-07-18', 5, 1),
+
+('Rafael Lima', 'rafael@email.com', 'senha123', '48999997777', '2002-09-05', 6, 1),
+
+('Beatriz Alves', 'bia@email.com', 'senha123', '48999998888', '2000-12-30', 2, 1),
+
+('Gabriel Martins', 'gabriel@email.com', 'senha123', '48999990000', '1996-04-22', 7, 0),
+
+('Fernanda Rocha', 'fernanda@email.com', 'senha123', '48999990101', '2003-06-14', 2, 1);

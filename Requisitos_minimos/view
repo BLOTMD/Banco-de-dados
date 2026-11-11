@@ -1,0 +1,17 @@
+
+create view vw_compras_detalhadas as
+select
+    c.id_compra,
+    u.cd_usuario,
+    u.tx_nome as nome_usuario,
+    u.tx_email as email_usuario,
+    p.id_produto,
+    p.tx_nome as nome_produto,
+    p.tx_marca as marca,
+    c.dt_datacompra as data_compra,
+    c.nr_valor as valor_compra
+from tb_compra c
+inner join tb_usuario u
+    on c.cd_usuario = u.cd_usuario
+inner join tb_produto p
+    on c.id_produto = p.id_produto;
