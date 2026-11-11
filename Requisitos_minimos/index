@@ -1,21 +1,151 @@
+CREATE INDEX idx_compra_produto
+ON tb_compra (id_produto);
+--antes:7.532
+--depois:2.744
+--melhoria:63%
+SELECT
+    p.id_produto,
+    p.tx_nome AS nome_produto,
+    p.tx_marca,
+    cat.tx_nome AS categoria,
+    COUNT(c.id_compra) AS total_compras,
+    SUM(c.nr_valor) AS valor_total_vendido,
+    AVG(c.nr_valor) AS valor_medio,
+    MAX(c.dt_datacompra) AS ultima_compra,
+    CASE
+        WHEN SUM(c.nr_valor) >= 10000 THEN 'Alto faturamento'
+        WHEN SUM(c.nr_valor) >= 5000 THEN 'Medio faturamento'
+        ELSE 'Baixo faturamento'
+    END AS classificacao
+FROM tb_compra c
+INNER JOIN tb_produto p
+    ON c.id_produto = p.id_produto
+INNER JOIN tb_categoria cat
+    ON p.cd_categoria = cat.cd_categoria
+INNER JOIN tb_usuario u
+    ON c.cd_usuario = u.cd_usuario
+WHERE
+    c.id_produto = 100
+    AND c.dt_datacompra >= '2025-01-01'
+    AND c.dt_datacompra < '2027-01-01'
+    AND u.cd_status = 1
+GROUP BY
+    p.id_produto,
+    p.tx_nome,
+    p.tx_marca,
+    cat.tx_nome
+HAVING COUNT(c.id_compra) > 0
+ORDER BY
+    valor_total_vendido DESC,
+    total_compras DESC;
+
 CREATE INDEX idx_compra_usuario
 ON tb_compra (cd_usuario);
+--antes:6.534
+--depois:1.524
+--melhoria:76%
+SELECT
+    u.cd_usuario,
+    UPPER(u.tx_nome) AS nome_usuario,
+    u.tx_email,
+    t.tx_tipo AS tipo_usuario,
+    COUNT(c.id_compra) AS quantidade_compras,
+    SUM(c.nr_valor) AS total_gasto,
+    AVG(c.nr_valor) AS media_gastos,
+    MIN(c.dt_datacompra) AS primeira_compra,
+    MAX(c.dt_datacompra) AS ultima_compra,
+    CASE
+        WHEN SUM(c.nr_valor) >= 10000 THEN 'Cliente VIP'
+        WHEN SUM(c.nr_valor) >= 5000 THEN 'Cliente frequente'
+        ELSE 'Cliente comum'
+    END AS classificacao_cliente
+FROM tb_compra c
+INNER JOIN tb_usuario u
+    ON c.cd_usuario = u.cd_usuario
+INNER JOIN tb_tipousuario t
+    ON u.cd_tipousuario = t.id_tipousuario
+INNER JOIN tb_produto p
+    ON c.id_produto = p.id_produto
+WHERE
+    c.cd_usuario = 2
+    AND u.cd_status = 1
+    AND c.dt_datacompra BETWEEN '2025-01-01' AND '2026-12-31'
+    AND p.nr_preco > 100
+GROUP BY
+    u.cd_usuario,
+    u.tx_nome,
+    u.tx_email,
+    t.tx_tipo
+HAVING
+    COUNT(c.id_compra) >= 1
+ORDER BY
+    total_gasto DESC,
+    quantidade_compras DESC;
 
 CREATE INDEX idx_produto_categoria
 ON tb_produto (cd_categoria);
+--antes:5.242
+--depois:0.412
+--melhoria:92%
+WITH produtos_classificados AS (
+    SELECT
+        p.id_produto,
+        p.tx_nome,
+        p.tx_marca,
+        p.nr_preco,
+        p.nr_estoque,
+        p.cd_categoria,
 
-CREATE INDEX idx_compra_produto
-ON tb_compra (id_produto);
+        AVG(p.nr_preco) OVER (
+            PARTITION BY p.cd_categoria
+        ) AS preco_medio_categoria,
 
-select * from tb_produto
---antes:0.004
---depois:0,001
---melhoria:75%
-select * from tb_compra
---antes:0,003
---depois:0,002
---melhoria:33%
-select * from tb_compra
---antes:0,004
---depois:0,001
---melhoria:75%
+        ROW_NUMBER() OVER (
+            PARTITION BY p.cd_categoria
+            ORDER BY p.nr_preco DESC
+        ) AS classificacao_preco
+
+    FROM tb_produto p
+    WHERE
+        p.cd_categoria = 2
+        AND p.nr_estoque > 0
+)
+
+SELECT
+    pc.id_produto,
+    pc.tx_nome AS nome_produto,
+    pc.tx_marca,
+    cat.tx_nome AS categoria,
+    pc.nr_preco,
+    pc.nr_estoque,
+    ROUND(pc.preco_medio_categoria, 2) AS media_categoria,
+    pc.classificacao_preco,
+
+    CASE
+        WHEN pc.nr_preco > pc.preco_medio_categoria
+            THEN 'Acima da media'
+        WHEN pc.nr_preco < pc.preco_medio_categoria
+            THEN 'Abaixo da media'
+        ELSE 'Na media'
+    END AS comparacao_preco,
+
+    CASE
+        WHEN pc.nr_estoque = 0 THEN 'Sem estoque'
+        WHEN pc.nr_estoque <= 5 THEN 'Estoque baixo'
+        WHEN pc.nr_estoque <= 20 THEN 'Estoque moderado'
+        ELSE 'Estoque alto'
+    END AS situacao_estoque
+
+FROM produtos_classificados pc
+INNER JOIN tb_categoria cat
+    ON pc.cd_categoria = cat.cd_categoria
+
+WHERE pc.nr_preco > (
+    SELECT AVG(p2.nr_preco)
+    FROM tb_produto p2
+    WHERE p2.cd_categoria = pc.cd_categoria
+)
+
+ORDER BY
+    pc.nr_preco DESC,
+    pc.tx_nome ASC;
